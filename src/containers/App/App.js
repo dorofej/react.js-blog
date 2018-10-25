@@ -2,15 +2,14 @@
 const l = require('utils/log')(module);
 
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './styles.less';
 
 class App extends Component {
 	render() {
 		l();
 
 		return (
-			<div className="App">
+			<div className="app">
 				React.js Blog
 			</div>
 		);
