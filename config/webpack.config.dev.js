@@ -346,10 +346,14 @@ module.exports = {
 		],
 	},
 	plugins: [
+		new webpack.DllReferencePlugin({
+			manifest: require(path.join(paths.appPublic, 'dll', 'manifest.dll.json')),
+		}),
 		// Generates an `index.html` file with the <script> injected.
 		new HtmlWebpackPlugin({
 			inject: true,
 			template: paths.appHtml,
+			dllScript: `<script src="${env.PUBLIC_URL || ''}/dll/bundle.dll.js"></script>`,
 		}),
 		// Makes some environment variables available in index.html.
 		// The public URL is available as %PUBLIC_URL% in index.html, e.g.:
