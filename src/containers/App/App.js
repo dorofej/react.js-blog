@@ -2,37 +2,34 @@
 const l = require('utils/log')(module);
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import NavBar from 'components/NavBar';
 
-import callApi from 'libs/callApi';
+import actions from 'store/posts/actions';
 
 import './styles.less';
 
+
+const { fetchPosts } = actions;
 
 class App extends Component {
 	constructor(props) {
 		l();
 
 		super(props);
-
-		this.state = {
-			posts: [],
-		};
 	}
 
 	componentDidMount() {
 		l();
 
-		callApi('posts')
-			.then((posts) => this.setState({ posts }))
-			.catch((error) => this.setState({ error: error.message || error }));
+		this.props.fetchPosts();
 	}
 
 	renderPosts() {
 		l();
 
-		const { posts } = this.state;
+		const { posts } = this.props;
 		const shortStrLen = 110;
 
 		return (
@@ -68,4 +65,13 @@ class App extends Component {
 	}
 };
 
-export default App;
+
+const state2Props = ({ Posts }) => ({
+	posts: Posts.posts,
+	loading: Posts.loading,
+	error: Posts.error,
+});
+
+const dispatch2Props = { fetchPosts };
+
+export default connect(state2Props, dispatch2Props)(App);
