@@ -48,6 +48,8 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
 
 // common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -392,6 +394,31 @@ module.exports = {
 								getLocalIdent: getCSSModuleLocalIdent,
 							},
 							'sass-loader'
+						),
+					},
+					// Support for LESS.
+					{
+						test: lessRegex,
+						exclude: lessModuleRegex,
+						loader: getStyleLoaders(
+							{
+								importLoaders: 2,
+								sourceMap: shouldUseSourceMap,
+							},
+							'less-loader'
+						),
+						sideEffects: true,
+					},
+					{
+						test: lessModuleRegex,
+						loader: getStyleLoaders(
+							{
+								importLoaders: 2,
+								sourceMap: shouldUseSourceMap,
+								modules: true,
+								getLocalIdent: getCSSModuleLocalIdent,
+							},
+							'less-loader'
 						),
 					},
 					// "file" loader makes sure assets end up in the `build` folder.
