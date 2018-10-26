@@ -2,6 +2,8 @@
 const l = require('utils/log')(module);
 
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import './styles.less';
 
 
@@ -13,10 +15,20 @@ export default function NavBar(props) {
 			<nav className="header__nav">
 				<ul className="header__nav-container">
 					<li className="header__nav-item">
-						<a className="header__nav-link" href="/home">Home</a>
+						<Link
+							to="/home"
+							className="header__nav-link"
+						>
+							Home
+						</Link>
 					</li>
 					<li className="header__nav-item">
-						<a className="header__nav-link" href="/about">About</a>
+						<Link
+							to="/about"
+							className="header__nav-link"
+						>
+							About
+						</Link>
 					</li>
 				</ul>
 			</nav>

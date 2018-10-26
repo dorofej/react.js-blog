@@ -3,10 +3,12 @@ const l = require('utils/log')(module);
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { ConnectedRouter } from 'react-router-redux';
 
 import NavBar from 'components/NavBar';
 
 import actions from 'store/posts/actions';
+import { history } from 'store';
 
 import './styles.less';
 
@@ -57,10 +59,12 @@ class App extends Component {
 		l();
 
 		return (
-			<div className="app">
-				<NavBar/>
-				{this.renderPosts()}
-			</div>
+			<ConnectedRouter history={history}>
+				<div className="app">
+					<NavBar/>
+					{this.renderPosts()}
+				</div>
+			</ConnectedRouter>
 		);
 	}
 };
