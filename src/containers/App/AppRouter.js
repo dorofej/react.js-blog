@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Posts from 'containers/Posts';
 import Post from 'containers/Posts/Post';
@@ -9,6 +9,12 @@ const AppRouter = (props) => {
 
 	return (
 		<Switch>
+			<Route
+				exact
+				key="root"
+				path="/"
+				component={() => (<Redirect to="/posts"/>)}
+			/>
 			<Route
 				exact
 				key="posts"
