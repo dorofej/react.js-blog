@@ -1,0 +1,52 @@
+.app {
+	&__posts {
+		padding-bottom: 20px;
+	}
+
+	&__post {
+		&-container {
+			background-color: rgba(77, 232, 141, 0.3);
+			padding: 20px;
+			border-radius: 5px;
+			margin: 20px;
+			display: flex;
+			flex-direction: column;
+			border: 3px solid white;
+			box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		&-title {
+			font-style: italic;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		&-body {
+			margin-top: 20px;
+		}
+
+		&-read-button {
+			margin-top: 10px;
+			align-self: flex-end;
+			width: 60px;
+			height: 20px;
+			font-size: 14px;
+			border: 1px solid grey;
+			color: white;
+			background-color: rgba(0, 23, 2, 0.5);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 4px;
+			cursor: pointer;
+			user-select: none;
+			&:active {
+				background-color: rgba(0, 23, 2, 0.8);
+			}
+		}
+	}
+}

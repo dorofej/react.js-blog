@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
 import NavBar from 'components/NavBar';
+import AppRouter from './AppRouter';
 
 import actions from 'store/posts/actions';
 import { history } from 'store';
@@ -28,33 +29,6 @@ class App extends Component {
 		this.props.fetchPosts();
 	}
 
-	renderPosts() {
-		l();
-
-		const { posts } = this.props;
-		const shortStrLen = 110;
-
-		return (
-			<div className="app__posts">
-				{
-					posts.map(({ title, body }) => (
-						<div className="app__post-container">
-							<span className="app__post-title">
-								{title}
-							</span>
-							<div className="app__post-body">
-								{ body.length < shortStrLen + 5 ? body : body.slice(0, shortStrLen) + '...'}
-							</div>
-							<div className="app__post-read-button">
-								READ
-							</div>
-						</div>
-					))
-				}
-			</div>
-		);
-	}
-
 	render() {
 		l();
 
@@ -62,7 +36,7 @@ class App extends Component {
 			<ConnectedRouter history={history}>
 				<div className="app">
 					<NavBar/>
-					{this.renderPosts()}
+					<AppRouter/>
 				</div>
 			</ConnectedRouter>
 		);
@@ -70,12 +44,6 @@ class App extends Component {
 };
 
 
-const state2Props = ({ Posts }) => ({
-	posts: Posts.posts,
-	loading: Posts.loading,
-	error: Posts.error,
-});
-
 const dispatch2Props = { fetchPosts };
 
-export default connect(state2Props, dispatch2Props)(App);
+export default connect(null, dispatch2Props)(App);

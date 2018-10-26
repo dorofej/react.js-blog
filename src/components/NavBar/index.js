@@ -16,6 +16,14 @@ export default function NavBar(props) {
 				<ul className="header__nav-container">
 					<li className="header__nav-item">
 						<Link
+							to="/posts"
+							className="header__nav-link"
+						>
+							Posts
+						</Link>
+					</li>
+					<li className="header__nav-item">
+						<Link
 							to="/home"
 							className="header__nav-link"
 						>
