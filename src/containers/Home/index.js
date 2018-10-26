@@ -4,6 +4,8 @@ const l = require('utils/log')(module);
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import storage from 'libs/storage';
+
 import './styles.less';
 
 
@@ -16,14 +18,16 @@ class Home extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 
 		this.state = {
-			value: '',
+			value: storage('postText'),
 		};
 	}
 
 	handleInputChange({ target }) {
 		l();
 
-		this.setState({ value: target.value });
+		const { value } = target;
+		this.setState({ value: value });
+		storage('postText', value);
 	}
 
 	render() {
