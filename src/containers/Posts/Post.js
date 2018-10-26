@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import storage from 'libs/storage';
+
 import commentsActions from 'store/comments/actions';
 import userActions from 'store/user/actions';
 
@@ -13,12 +15,32 @@ const { fetchUser } = userActions;
 
 
 class Post extends Component {
+	constructor(props) {
+		l();
+
+		super(props);
+
+		this.handleCommentInputChange = this.handleCommentInputChange.bind(this);
+
+		this.state = {
+			comment: storage('comment'),
+		};
+	}
+
 	componentDidMount() {
 		l();
 
 		const { fetchComments, match } = this.props;
 		fetchComments(match.params.id);
 		this.loadUser();
+	}
+
+	handleCommentInputChange({ target }) {
+		l();
+
+		const { value } = target;
+		this.setState({ comment: value });
+		storage('comment', value);
 	}
 
 	loadUser() {
@@ -101,6 +123,7 @@ class Post extends Component {
 		l();
 
 		const { comments } = this.props;
+		const { comment } = this.state;
 
 		return (
 			<div className="post__comments">
@@ -125,6 +148,22 @@ class Post extends Component {
 						</div>
 					))
 				}
+				<div className="post__add-comment-container">
+					<textarea
+						value={comment}
+						className="post__add-comment-input"
+						type="text"
+						placeholder="Write Comment Here"
+						rows="7"
+						name="post"
+						onChange={this.handleCommentInputChange}
+					/>
+					<span
+						className="post__add-comment-button"
+					>
+						ADD COMMENT
+					</span>
+				</div>
 			</div>
 		);
 	}
