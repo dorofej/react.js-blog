@@ -8,6 +8,9 @@ const initState = {
 	loading: false,
 	success: false,
 	error: false,
+	addRequest: false,
+	addSuccess: false,
+	addError: false,
 };
 
 
@@ -33,6 +36,23 @@ export default function commentsReducer(
 				...state,
 				...{ loading: false, success: false, error: action.error },
 			};
+
+		case actions.ADD_COMMENT_REQUEST:
+			return {
+				...state,
+				...{ addRequest: true, addSuccess: false, addError: false },
+			};
+		case actions.ADD_COMMENT_SUCCESS:
+			return {
+				...state,
+				...{ addRequest: false, addSuccess: true, addError: false },
+			};
+		case actions.ADD_COMMENT_FAILURE:
+			return {
+				...state,
+				...{ addRequest: false, addSuccess: false, addError: action.error },
+			};
+
 		default:
 			return state;
 	};

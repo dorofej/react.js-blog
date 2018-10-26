@@ -10,7 +10,7 @@ import storage from 'libs/storage';
 import commentsActions from 'store/comments/actions';
 import userActions from 'store/user/actions';
 
-const { fetchComments } = commentsActions;
+const { fetchComments, addComment } = commentsActions;
 const { fetchUser } = userActions;
 
 
@@ -21,6 +21,7 @@ class Post extends Component {
 		super(props);
 
 		this.handleCommentInputChange = this.handleCommentInputChange.bind(this);
+		this.addComment = this.addComment.bind(this);
 
 		this.state = {
 			comment: storage('comment'),
@@ -41,6 +42,20 @@ class Post extends Component {
 		const { value } = target;
 		this.setState({ comment: value });
 		storage('comment', value);
+	}
+
+	addComment() {
+		l();
+
+		this.props.addComment({
+			postId: 501,
+			title: 'Title',
+			body: this.state.comment,
+			userId: 1,
+		});
+
+		this.setState({ comment: '' });
+		storage('comment', '');
 	}
 
 	loadUser() {
@@ -160,6 +175,7 @@ class Post extends Component {
 					/>
 					<span
 						className="post__add-comment-button"
+						onClick={this.addComment}
 					>
 						ADD COMMENT
 					</span>
@@ -206,6 +222,6 @@ const state2Props = ({ Posts, Comments, User }) => ({
 	userError: User.error,
 });
 
-const dispatch2Props = { fetchComments, fetchUser };
+const dispatch2Props = { fetchComments, addComment, fetchUser };
 
 export default connect(state2Props, dispatch2Props)(withRouter(Post));
