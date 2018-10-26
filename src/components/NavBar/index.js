@@ -24,14 +24,6 @@ export default function NavBar(props) {
 					</li>
 					<li className="header__nav-item">
 						<Link
-							to="/home"
-							className="header__nav-link"
-						>
-							Home
-						</Link>
-					</li>
-					<li className="header__nav-item">
-						<Link
 							to="/about"
 							className="header__nav-link"
 						>
