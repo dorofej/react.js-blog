@@ -50,3 +50,39 @@
 		}
 	}
 }
+
+.post {
+	&__comments {
+		padding: 40px;
+
+		&-title {
+			margin: 20px;
+			color: rgba(grey, 0.7);
+			font-size: 18px;
+			font-style: italic;
+		}
+	}
+
+	&__comment {
+		&-container {
+			border: 1px solid rgba(black, 0.2);
+			border-radius: 3px;
+			background-color: white;
+			margin: 30px auto;
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		&-body {
+			font-size: 14px;
+		}
+
+		&-email {
+			margin: 10px 50px 0 0;
+			align-self: flex-end;
+			font-size: 12px;
+			font-style: italic;
+		}
+	}
+}
