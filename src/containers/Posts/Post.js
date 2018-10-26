@@ -5,9 +5,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import actions from 'store/comments/actions';
+import commentsActions from 'store/comments/actions';
+import userActions from 'store/user/actions';
 
-const { fetchComments } = actions;
+const { fetchComments } = commentsActions;
+const { fetchUser } = userActions;
 
 
 class Post extends Component {
@@ -16,6 +18,21 @@ class Post extends Component {
 
 		const { fetchComments, match } = this.props;
 		fetchComments(match.params.id);
+		this.loadUser();
+	}
+
+	loadUser() {
+		l();
+
+		const { fetchUser } = this.props;
+		const intervalId = setInterval(() => {
+			l('SET_INTERVAL');
+			const post = this.getPostObj();
+			if (post) {
+				fetchUser(post.userId);
+				clearInterval(intervalId);
+			};
+		}, 500);
 	}
 
 	getPostObj() {
@@ -27,6 +44,57 @@ class Post extends Component {
 		for (let i = 0; i < posts.length; i++) {
 			if (posts[i].id === postId) return posts[i];
 		};
+	}
+
+	renderUserInfo() {
+		l();
+
+		const { user } = this.props;
+
+		if (!user) return null;
+
+		const { address } = user;
+		return (
+			<div className="post__user-table-wrapper">
+				<table className="post__user-table">
+					<thead>
+						<tr className="post__user-table-row--header">
+							<th colSpan="2">About Author</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr className="post__user-table-row">
+							<td>Full Name</td>
+							<td>{user.name}</td>
+						</tr>
+						<tr className="post__user-table-row">
+							<td>Email</td>
+							<td><a href={`mailto:${user.email}`}>{user.email}</a></td>
+						</tr>
+						<tr className="post__user-table-row">
+							<td>Phone</td>
+							<td>{user.phone}</td>
+						</tr>
+						<tr className="post__user-table-row">
+							<td>Username</td>
+							<td>{user.username}</td>
+						</tr>
+						<tr className="post__user-table-row">
+							<td>Website</td>
+							<td><a href={`https://${user.website}`}>{user.website}</a></td>
+						</tr>
+						<tr className="post__user-table-row">
+							<td>Company</td>
+							<td>{user.company.name}</td>
+						</tr>
+						<tr className="post__user-table-row">
+							<td>Location</td>
+							<td>{address.city}, {address.street}, {address.suite}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		);
 	}
 
 	renderComments() {
@@ -71,6 +139,7 @@ class Post extends Component {
 
 		return (
 			<div className="app__posts">
+				{this.renderUserInfo()}
 				<div className="app__post-container">
 					<span className="app__post-title">
 						{title}
@@ -86,15 +155,18 @@ class Post extends Component {
 };
 
 
-const state2Props = ({ Posts, Comments }) => ({
+const state2Props = ({ Posts, Comments, User }) => ({
 	posts: Posts.posts,
 	arePostsLoaded: Posts.loading,
 	postsError: Posts.error,
 	comments: Comments.comments,
 	areCommentsLoaded: Comments.loading,
 	commentsError: Comments.error,
+	user: User.user,
+	isUserLoaded: User.loading,
+	userError: User.error,
 });
 
-const dispatch2Props = { fetchComments };
+const dispatch2Props = { fetchComments, fetchUser };
 
 export default connect(state2Props, dispatch2Props)(withRouter(Post));
