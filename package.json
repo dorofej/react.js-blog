@@ -6,6 +6,7 @@
     "start": "NODE_PATH=src node scripts/start.js",
     "build": "NODE_PATH=src node scripts/build.js",
     "build:dll": "node_modules/.bin/webpack --config config/webpack.config.dll.js",
+    "deploy": "npm run build && firebase deploy",
     "postinstall": "npm run build:dll",
     "test": "node scripts/test.js"
   },
