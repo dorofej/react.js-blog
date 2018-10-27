@@ -32,6 +32,10 @@ const AppRouter = (props) => {
 				path="/about"
 				component={asyncComponent(() => import('../About'))}
 			/>
+			<Route
+				key="not-found"
+				component={asyncComponent(() => import('../NotFound'))}
+			/>
 		</Switch>
 	);
 };
