@@ -26,6 +26,12 @@ const AppRouter = (props) => {
 				path="/posts/:id"
 				component={asyncComponent(() => import('../Posts/Post'))}
 			/>
+			<Route
+				exact
+				key="about"
+				path="/about"
+				component={asyncComponent(() => import('../About'))}
+			/>
 		</Switch>
 	);
 };
