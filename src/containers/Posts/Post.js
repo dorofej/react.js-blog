@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import Spinner from 'components/Spinner';
+
 import storage from 'libs/storage';
 
 import commentsActions from 'store/comments/actions';
@@ -88,7 +90,13 @@ class Post extends Component {
 	renderUserInfo() {
 		l();
 
-		const { user } = this.props;
+		const { user, isUserLoaded } = this.props;
+
+		if (isUserLoaded) return (
+			<div className="post__user-table-wrapper">
+				<Spinner/>
+			</div>
+		);
 
 		if (!user) return null;
 
@@ -139,13 +147,17 @@ class Post extends Component {
 	renderComments() {
 		l();
 
-		const { comments } = this.props;
+		const { comments, areCommentsLoaded } = this.props;
 		const { comment } = this.state;
 
 		return (
 			<div className="post__comments">
 				<span className="post__comments-title">Comments</span>
 				{
+					areCommentsLoaded
+						?
+					<Spinner/>
+						:
 					comments.map(({ id, name, email, body }) => (
 						<div
 							key={id}
@@ -188,6 +200,14 @@ class Post extends Component {
 
 	render() {
 		l();
+
+		const { arePostsLoaded } = this.props;
+
+		if (arePostsLoaded) return (
+			<div style={{ marginTop: 40 }}>
+				<Spinner/>
+			</div>
+		);
 
 		const post = this.getPostObj();
 		if (!post) return (

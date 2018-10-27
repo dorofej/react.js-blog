@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SearchInput, { createFilter } from 'react-search-input';
 
+import Spinner from 'components/Spinner';
+
 import './styles.less';
 
 
@@ -59,11 +61,16 @@ class Posts extends Component {
 		l();
 
 		const posts = this.getFilteredPosts();
+		const { loading } = this.props;
 
 		return (
 			<div className="app__posts">
 				{this.renderSearchBox()}
 				{
+					loading
+						?
+					<Spinner/>
+						:
 					posts.map(({ title, body, id }) => (
 						<div className="app__post-container">
 							<span className="app__post-title">
