@@ -190,7 +190,13 @@ class Post extends Component {
 		l();
 
 		const post = this.getPostObj();
-		if (!post) return <div>Post with this id doesn't exist!</div>;
+		if (!post) return (
+			<div
+				className="post__not-found"
+			>
+				Post with this id doesn't exist!
+			</div>
+		);
 
 		const { title, body }= post;
 
