@@ -10,6 +10,8 @@ import storage from 'libs/storage';
 import commentsActions from 'store/comments/actions';
 import userActions from 'store/user/actions';
 
+import './styles.less';
+
 const { fetchComments, addComment } = commentsActions;
 const { fetchUser } = userActions;
 

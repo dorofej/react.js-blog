@@ -1,8 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Posts from 'containers/Posts';
-import Post from 'containers/Posts/Post';
+import asyncComponent from 'libs/asyncComponent';
 
 
 const AppRouter = (props) => {
@@ -19,13 +18,13 @@ const AppRouter = (props) => {
 				exact
 				key="posts"
 				path="/posts"
-				component={() => (<Posts/>)}
+				component={asyncComponent(() => import('../Posts'))}
 			/>
 			<Route
 				exact
 				key="post"
 				path="/posts/:id"
-				component={() => (<Post/>)}
+				component={asyncComponent(() => import('../Posts/Post'))}
 			/>
 		</Switch>
 	);
