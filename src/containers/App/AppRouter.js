@@ -24,7 +24,7 @@ const AppRouter = (props) => {
 				exact
 				key="post"
 				path="/posts/:id"
-				component={asyncComponent(() => import('containers/Posts/Post'))}
+				component={asyncComponent(() => import('containers/Post'))}
 			/>
 			<Route
 				exact
