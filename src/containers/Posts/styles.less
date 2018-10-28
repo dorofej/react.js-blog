@@ -1,3 +1,13 @@
+.leaflet-container {
+	height: 100%;
+	width: 100%;
+	border-radius: 10px;
+}
+
+.ReactModal__Body--open {
+	overflow: hidden;
+}
+
 .search-box {
 	&__input {
 		width: 330px;
@@ -215,6 +225,13 @@
 			&:last-child {
 				border-bottom: none;
 			}
+		}
+
+		&-table-location-cell {
+			text-decoration: underline;
+			font-style: italic;
+			cursor: pointer;
+			color: #00BFFF;
 		}
 	}
 }

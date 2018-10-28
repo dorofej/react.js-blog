@@ -4,6 +4,17 @@ const l = require('utils/log')(module);
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import Modal from 'react-modal';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+	iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+	iconUrl: require('leaflet/dist/images/marker-icon.png'),
+	shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 import Spinner from 'components/Spinner';
 
@@ -26,9 +37,12 @@ class Post extends Component {
 
 		this.handleCommentInputChange = this.handleCommentInputChange.bind(this);
 		this.addComment = this.addComment.bind(this);
+		this.openMapModal = this.openMapModal.bind(this);
+		this.closeMapModal = this.closeMapModal.bind(this);
 
 		this.state = {
 			comment: storage('comment'),
+			isMapVisible: false,
 		};
 	}
 
@@ -87,6 +101,51 @@ class Post extends Component {
 		};
 	}
 
+	openMapModal() {
+		l();
+
+		this.setState({ isMapVisible: true });
+	}
+
+	closeMapModal() {
+		l();
+
+		this.setState({ isMapVisible: false });
+	}
+
+	renderMapModal() {
+		l();
+
+		const { user } = this.props;
+		const { isMapVisible } = this.state;
+		const { geo, city, street, suite } = user ? user.address : {};
+
+		return (
+			<Modal
+				isOpen={user && isMapVisible}
+				style={styles.mapModal}
+				contentLabel="Modal"
+				ariaHideApp={false}
+				onRequestClose={this.closeMapModal}
+			>
+				<Map
+					center={geo}
+					zoom={2}
+				>
+					<TileLayer
+						attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+						url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+					/>
+					<Marker position={geo}>
+						<Popup>
+							{city}, {street}, {suite}
+						</Popup>
+					</Marker>
+				</Map>
+			</Modal>
+		);
+	}
+
 	renderUserInfo() {
 		l();
 
@@ -136,7 +195,12 @@ class Post extends Component {
 						</tr>
 						<tr className="post__user-table-row">
 							<td>Location</td>
-							<td>{address.city}, {address.street}, {address.suite}</td>
+							<td
+								className="post__user-table-location-cell"
+								onClick={this.openMapModal}
+							>
+								{address.city}, {address.street}, {address.suite}
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -222,6 +286,7 @@ class Post extends Component {
 
 		return (
 			<div className="app__posts">
+				{this.renderMapModal()}
 				{this.renderUserInfo()}
 				<div className="app__post-container">
 					<span className="app__post-title">
@@ -235,6 +300,26 @@ class Post extends Component {
 			</div>
 		);
 	}
+};
+
+const styles = {
+	mapModal: {
+		overlay: {
+			backgroundColor: 'rgba(196, 196, 196, 0.5)',
+			zIndex: 9999999,
+		},
+		content: {
+			borderRadius: 30,
+			position: 'absolute',
+			top: 80,
+			left: 80,
+			right: 80,
+			bottom: 80,
+			border: 'none',
+			overflow: 'hidden',
+			zIndex: 9999999,
+		},
+	},
 };
 
 
