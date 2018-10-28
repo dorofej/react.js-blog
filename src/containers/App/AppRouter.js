@@ -18,23 +18,23 @@ const AppRouter = (props) => {
 				exact
 				key="posts"
 				path="/posts"
-				component={asyncComponent(() => import('../Posts'))}
+				component={asyncComponent(() => import('containers/Posts'))}
 			/>
 			<Route
 				exact
 				key="post"
 				path="/posts/:id"
-				component={asyncComponent(() => import('../Posts/Post'))}
+				component={asyncComponent(() => import('containers/Posts/Post'))}
 			/>
 			<Route
 				exact
 				key="about"
 				path="/about"
-				component={asyncComponent(() => import('../About'))}
+				component={asyncComponent(() => import('containers/About'))}
 			/>
 			<Route
 				key="not-found"
-				component={asyncComponent(() => import('../NotFound'))}
+				component={asyncComponent(() => import('containers/NotFound'))}
 			/>
 		</Switch>
 	);
