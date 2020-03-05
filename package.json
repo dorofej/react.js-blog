@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "NODE_PATH=src node scripts/start.js",
-    "build": "NODE_PATH=src GENERATE_SOURCEMAP=false node scripts/build.js",
+    "start": "node scripts/start.js",
+    "build": "GENERATE_SOURCEMAP=false node scripts/build.js",
     "build:dll": "node_modules/.bin/webpack --config config/webpack.config.dll.js",
     "deploy": "npm run build && firebase deploy",
     "postinstall": "npm run build:dll",

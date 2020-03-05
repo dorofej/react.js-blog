@@ -1,2 +1,2 @@
 /* eslint-disable no-useless-rename */
-export { default as default } from './App';
+export { default } from './App';

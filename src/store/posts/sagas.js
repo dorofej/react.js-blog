@@ -1,39 +1,42 @@
 /* eslint-disable import/first */
-const l = require('utils/log')(module);
+const l = require('../../utils/log')(module);
 
 import {
-	all,
-	takeLatest,
-	put,
-	call,
+  all,
+  takeLatest,
+  put,
+  call,
 } from 'redux-saga/effects';
 
-import callApi from 'libs/callApi';
-import actions from './actions';
-
+import callApi from '../../libs/callApi';
+import {
+  FETCH_POSTS_REQUEST,
+  fetchPostsSuccess,
+  fetchPostsFailure,
+} from './actions';
 
 const fetchPosts = () => callApi('posts');
 
 function* watchPostsFetching(action) {
-	l();
+  l();
 
-	try {
-		const posts = yield call(fetchPosts);
+  try {
+    const posts = yield call(fetchPosts);
 
-		if (Array.isArray(posts)) {
-			yield put(actions.fetchPostsSuccess(posts));
-		} else {
-			yield put(actions.fetchPostsFailure(posts));
-		};
-	} catch(error) {
-		yield put(actions.fetchPostsFailure(error));
-	};
+    if (Array.isArray(posts)) {
+      yield put(fetchPostsSuccess(posts));
+    } else {
+      yield put(fetchPostsFailure(posts));
+    };
+  } catch(error) {
+    yield put(fetchPostsFailure(error));
+  };
 };
 
 export default function* rootSaga() {
-	l();
+  l();
 
-	yield all([
-		takeLatest(actions.FETCH_POSTS_REQUEST, watchPostsFetching),
-	]);
+  yield all([
+    takeLatest(FETCH_POSTS_REQUEST, watchPostsFetching),
+  ]);
 };

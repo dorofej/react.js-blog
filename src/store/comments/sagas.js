@@ -1,62 +1,67 @@
 /* eslint-disable import/first */
-const l = require('utils/log')(module);
+const l = require('../../utils/log')(module);
 
 import {
-	all,
-	takeLatest,
-	takeEvery,
-	put,
-	call,
+  all,
+  takeLatest,
+  takeEvery,
+  put,
+  call,
 } from 'redux-saga/effects';
 
-import callApi from 'libs/callApi';
-import actions from './actions';
-
+import callApi from '../../libs/callApi';
+import {
+  FETCH_COMMENTS_REQUEST,
+  ADD_COMMENT_REQUEST,
+  fetchCommentsSuccess,
+  fetchCommentsFailure,
+  addCommentSuccess,
+  addCommentFailure,
+} from './actions';
 
 const fetchComments = (postId) => callApi(
-	postId ? `comments?postId=${postId}` : 'comments'
+  postId ? `comments?postId=${postId}` : 'comments'
 );
 
 const addComment = (body) => callApi('comments', 'POST', body);
 
-
 function* watchCommentsFetching(action) {
-	l();
+  l();
 
-	try {
-		const comments = yield call(fetchComments, action.postId);
+  try {
+    const comments = yield call(fetchComments, action.postId);
 
-		if (Array.isArray(comments)) {
-			yield put(actions.fetchCommentsSuccess(comments));
-		} else {
-			yield put(actions.fetchCommentsFailure(comments));
-		};
-	} catch(error) {
-		yield put(actions.fetchCommentsFailure(error));
-	};
+    if (Array.isArray(comments)) {
+      yield put(fetchCommentsSuccess(comments));
+    } else {
+      yield put(fetchCommentsFailure(comments));
+    };
+  } catch(error) {
+    yield put(fetchCommentsFailure(error));
+  };
 };
 
 function* watchCommentAdding(action) {
-	l();
+  l();
 
-	try {
-		const comment = yield call(addComment, action.body);
+  try {
+    const comment = yield call(addComment, action.body);
 
-		if (comment.postId) {
-			yield put(actions.addCommentSuccess(comment));
-		} else {
-			yield put(actions.addCommentFailure(comment));
-		};
-	} catch(error) {
-		yield put(actions.addCommentFailure(error));
-	};
+    if (comment.postId) {
+      yield put(addCommentSuccess(comment));
+    } else {
+      yield put(addCommentFailure(comment));
+    };
+  } catch(error) {
+    yield put(addCommentFailure(error));
+  };
 };
 
 export default function* rootSaga() {
-	l();
+  l();
 
-	yield all([
-		takeLatest(actions.FETCH_COMMENTS_REQUEST, watchCommentsFetching),
-		takeEvery(actions.ADD_COMMENT_REQUEST, watchCommentAdding),
-	]);
+  yield all([
+    takeLatest(FETCH_COMMENTS_REQUEST, watchCommentsFetching),
+    takeEvery(ADD_COMMENT_REQUEST, watchCommentAdding),
+  ]);
 };

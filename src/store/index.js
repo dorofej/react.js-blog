@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-const l = require('utils/log')(module);
+const l = require('../utils/log')(module);
 
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
@@ -10,25 +10,25 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import reducers from './reducers';
 import rootSaga from './sagas';
 
-const history = createHistory();
+export const history = createHistory();
+
 const routeMiddleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware, routeMiddleware];
 
 if (process.env.NODE_ENV === 'development') {
-	l('DEVELOPMENT MODE');
-	middlewares.push(logger);
+  l('DEVELOPMENT MODE');
+  middlewares.push(logger);
 };
 
 const rootReducer = combineReducers({
-	...reducers,
-	router: routerReducer,
+  ...reducers,
+  router: routerReducer,
 });
 
-const store = createStore(
-	rootReducer,
-	compose(applyMiddleware(...middlewares)),
+export const store = createStore(
+  rootReducer,
+  compose(applyMiddleware(...middlewares)),
 );
-sagaMiddleware.run(rootSaga);
 
-export { store, history };
+sagaMiddleware.run(rootSaga);

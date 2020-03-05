@@ -1,39 +1,42 @@
 /* eslint-disable import/first */
-const l = require('utils/log')(module);
+const l = require('../../utils/log')(module);
 
 import {
-	all,
-	takeLatest,
-	put,
-	call,
+  all,
+  takeLatest,
+  put,
+  call,
 } from 'redux-saga/effects';
 
-import callApi from 'libs/callApi';
-import actions from './actions';
-
+import callApi from '../../libs/callApi';
+import {
+  FETCH_USER_REQUEST,
+  fetchUserSuccess,
+  fetchUserFailure,
+} from './actions';
 
 const fetchUser = (id) => callApi(`users/${id}`);
 
 function* watchUserFetching(action) {
-	l();
+  l();
 
-	try {
-		const user = yield call(fetchUser, action.id);
+  try {
+    const user = yield call(fetchUser, action.id);
 
-		if (user.name) {
-			yield put(actions.fetchUserSuccess(user));
-		} else {
-			yield put(actions.fetchUserFailure(user));
-		};
-	} catch(error) {
-		yield put(actions.fetchUserFailure(error));
-	};
+    if (user.name) {
+      yield put(fetchUserSuccess(user));
+    } else {
+      yield put(fetchUserFailure(user));
+    };
+  } catch(error) {
+    yield put(fetchUserFailure(error));
+  };
 };
 
 export default function* rootSaga() {
-	l();
+  l();
 
-	yield all([
-		takeLatest(actions.FETCH_USER_REQUEST, watchUserFetching),
-	]);
+  yield all([
+    takeLatest(FETCH_USER_REQUEST, watchUserFetching),
+  ]);
 };

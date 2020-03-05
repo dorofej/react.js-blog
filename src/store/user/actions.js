@@ -1,39 +1,33 @@
 /* eslint-disable import/first */
-const l = require('utils/log')(module);
+const l = require('../../utils/log')(module);
 
+export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST';
+export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
+export const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE';
 
-const actions = {
-	FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
-	FETCH_USER_SUCCESS: 'FETCH_USER_SUCCESS',
-	FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
+export const fetchUser = (id) => {
+  l();
 
-	fetchUser: (id) => {
-		l();
-
-		return {
-			type: actions.FETCH_USER_REQUEST,
-			id,
-		};
-	},
-
-	fetchUserSuccess: (user) => {
-		l();
-
-		return {
-			type: actions.FETCH_USER_SUCCESS,
-			user,
-		};
-	},
-
-	fetchUserFailure: (error) => {
-		l();
-
-		return {
-			type: actions.FETCH_USER_FAILURE,
-			error,
-		};
-	},
+  return {
+    type: FETCH_USER_REQUEST,
+    id,
+  };
 };
 
+export const fetchUserSuccess = (user) => {
+  l();
 
-export default actions;
+  return {
+    type: FETCH_USER_SUCCESS,
+    user,
+  };
+};
+
+export const fetchUserFailure = (error) => {
+  l();
+
+  return {
+    type: FETCH_USER_FAILURE,
+    error,
+  };
+};
