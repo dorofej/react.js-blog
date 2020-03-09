@@ -47,7 +47,7 @@ function* watchCommentAdding(action) {
   try {
     const comment = yield call(addComment, action.body);
 
-    if (comment.postId) {
+    if (comment.id) {
       yield put(addCommentSuccess(comment));
     } else {
       yield put(addCommentFailure(comment));

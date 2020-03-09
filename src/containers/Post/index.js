@@ -4,26 +4,12 @@ const l = require('../../utils/log')(module);
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-import Modal from 'react-modal';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-});
+import SmoothCollapse from 'react-smooth-collapse';
 
 import Spinner from '../../components/Spinner';
-
 import storage from '../../libs/storage';
-
 import { fetchComments, addComment } from '../../store/comments/actions';
 import { fetchUser } from '../../store/user/actions';
-
-import './styles.less';
 
 class Post extends Component {
   constructor(props) {
@@ -33,12 +19,10 @@ class Post extends Component {
 
     this.handleCommentInputChange = this.handleCommentInputChange.bind(this);
     this.addComment = this.addComment.bind(this);
-    this.openMapModal = this.openMapModal.bind(this);
-    this.closeMapModal = this.closeMapModal.bind(this);
 
     this.state = {
       comment: storage('comment'),
-      isMapVisible: false,
+      userInfoVisible: false,
     };
   }
 
@@ -97,48 +81,36 @@ class Post extends Component {
     };
   }
 
-  openMapModal() {
+  renderPost() {
     l();
 
-    this.setState({ isMapVisible: true });
-  }
+    const post = this.getPostObj();
+    if (!post) {
+      return (
+        <div>
+          Post with this id doesn't exist!
+        </div>
+      );
+    }
 
-  closeMapModal() {
-    l();
-
-    this.setState({ isMapVisible: false });
-  }
-
-  renderMapModal() {
-    l();
-
-    const { user } = this.props;
-    const { isMapVisible } = this.state;
-    const { geo, city, street, suite } = user ? user.address : {};
+    const { title, body } = post;
 
     return (
-      <Modal
-        isOpen={user && isMapVisible}
-        style={styles.mapModal}
-        contentLabel="Modal"
-        ariaHideApp={false}
-        onRequestClose={this.closeMapModal}
-      >
-        <Map
-          center={geo}
-          zoom={2}
-        >
-          <TileLayer
-            attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-          />
-          <Marker position={geo}>
-            <Popup>
-              {city}, {street}, {suite}
-            </Popup>
-          </Marker>
-        </Map>
-      </Modal>
+      <div>
+        <h4>{title}</h4>
+        <div className="mt-2">{body}</div>
+      </div>
+    );
+  }
+
+  renderUserInfoRow(col1, col2) {
+    return (
+      <div className="list-group-item">
+        <div className="row">
+          <div className="col-sm-4 mb-1 mb-sm-0 font-weight-bold">{col1}</div>
+          <div className="col-sm-8">{col2}</div>
+        </div>
+      </div>
     );
   }
 
@@ -147,59 +119,34 @@ class Post extends Component {
 
     const { user, isUserLoaded } = this.props;
 
-    if (isUserLoaded) return (
-      <div className="post__user-table-wrapper">
-        <Spinner/>
-      </div>
-    );
+    if (isUserLoaded) {
+      return <Spinner/>;
+    }
 
     if (!user) return null;
 
     const { address } = user;
+
     return (
-      <div className="post__user-table-wrapper">
-        <table className="post__user-table">
-          <thead>
-            <tr className="post__user-table-row--header">
-              <th colSpan="2">About Author</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="post__user-table-row">
-              <td>Full Name</td>
-              <td>{user.name}</td>
-            </tr>
-            <tr className="post__user-table-row">
-              <td>Email</td>
-              <td><a href={`mailto:${user.email}`}>{user.email}</a></td>
-            </tr>
-            <tr className="post__user-table-row">
-              <td>Phone</td>
-              <td>{user.phone}</td>
-            </tr>
-            <tr className="post__user-table-row">
-              <td>Username</td>
-              <td>{user.username}</td>
-            </tr>
-            <tr className="post__user-table-row">
-              <td>Website</td>
-              <td><a href={`https://${user.website}`}>{user.website}</a></td>
-            </tr>
-            <tr className="post__user-table-row">
-              <td>Company</td>
-              <td>{user.company.name}</td>
-            </tr>
-            <tr className="post__user-table-row">
-              <td>Location</td>
-              <td
-                className="post__user-table-location-cell"
-                onClick={this.openMapModal}
-              >
-                {address.city}, {address.street}, {address.suite}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div>
+        <button
+          className="btn btn-primary"
+          type="button"
+          onClick={() => this.setState(({ userInfoVisible }) => ({ userInfoVisible: !userInfoVisible }))}
+        >
+          About author
+        </button>
+        <SmoothCollapse expanded={this.state.userInfoVisible}>
+          <div className="list-group mt-4">
+            {this.renderUserInfoRow('Full Name', user.name)}
+            {this.renderUserInfoRow('Email', user.email)}
+            {this.renderUserInfoRow('Phone', user.phone)}
+            {this.renderUserInfoRow('Username', user.username)}
+            {this.renderUserInfoRow('Website', user.website)}
+            {this.renderUserInfoRow('Company', user.company.name)}
+            {this.renderUserInfoRow('Location', `${address.city}, ${address.street}, ${address.suite}`)}
+          </div>
+        </SmoothCollapse>
       </div>
     );
   }
@@ -208,52 +155,43 @@ class Post extends Component {
     l();
 
     const { comments, areCommentsLoaded } = this.props;
-    const { comment } = this.state;
 
     return (
-      <div className="post__comments">
-        <span className="post__comments-title">Comments</span>
+      <>
+        <h4>Comments</h4>
         {
           areCommentsLoaded
             ?
           <Spinner/>
             :
           comments.map(({ id, name, email, body }) => (
-            <div
-              key={id}
-              className="post__comment-container"
-            >
-              <div
-                className="post__comment-body"
-              >
-                {body}
+            <div key={id} className="card mt-4 border-secondary">
+              <div className="card-body">
+                <h5 class="card-title">{name}</h5>
+                <div className="cart-text">
+                  {body}
+                </div>
+                <a className="d-block border-top mt-2 pt-2" href={`mailto:${email}`}>
+                  {email}
+                </a>
               </div>
-              <a
-                href={`mailto:${email}`}
-                className="post__comment-email"
-              >
-                {email}
-              </a>
             </div>
           ))
         }
-        <div className="post__add-comment-container">
-          <textarea
-            value={comment}
-            className="post__add-comment-input"
-            type="text"
-            placeholder="Write Comment Here"
-            rows="7"
-            name="post"
-            onChange={this.handleCommentInputChange}
-          />
-          <span
-            className="post__add-comment-button"
-            onClick={this.addComment}
-          >
-            ADD COMMENT
-          </span>
-        </div>
+      </>
+    );
+  }
+
+  renderCommentInput() {
+    return (
+      <div className="form-group">
+        <h4>Your comment</h4>
+        <textarea
+          className="form-control"
+          rows="3"
+          onChange={this.handleCommentInputChange}
+        />
+        <button className="btn btn-primary mt-3" onClick={this.addComment}>Add</button>
       </div>
     );
   }
@@ -263,59 +201,29 @@ class Post extends Component {
 
     const { arePostsLoaded } = this.props;
 
-    if (arePostsLoaded) return (
-      <div style={{ marginTop: 40 }}>
-        <Spinner/>
-      </div>
-    );
-
-    const post = this.getPostObj();
-    if (!post) return (
-      <div
-        className="post__not-found"
-      >
-        Post with this id doesn't exist!
-      </div>
-    );
-
-    const { title, body }= post;
+    if (arePostsLoaded) {
+      return (
+        <div style={{ marginTop: 40 }}>
+          <Spinner/>
+        </div>
+      );
+    }
 
     return (
-      <div className="app__posts">
-        {this.renderMapModal()}
-        {this.renderUserInfo()}
-        <div className="app__post-container">
-          <span className="app__post-title">
-            {title}
-          </span>
-          <div className="app__post-body">
-            {body}
-          </div>
+      <>
+        {this.renderPost()}
+        <div className="mt-5">
+          {this.renderUserInfo()}
         </div>
-        {this.renderComments()}
-      </div>
+        <div className="mt-5">
+          {this.renderComments()}
+        </div>
+        <div className="mt-5">
+          {this.renderCommentInput()}
+        </div>
+      </>
     );
   }
-};
-
-const styles = {
-  mapModal: {
-    overlay: {
-      backgroundColor: 'rgba(196, 196, 196, 0.5)',
-      zIndex: 9999999,
-    },
-    content: {
-      borderRadius: 30,
-      position: 'absolute',
-      top: 80,
-      left: 80,
-      right: 80,
-      bottom: 80,
-      border: 'none',
-      overflow: 'hidden',
-      zIndex: 9999999,
-    },
-  },
 };
 
 const mapStateToProps = ({ Posts, Comments, User }) => ({

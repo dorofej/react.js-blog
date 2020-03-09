@@ -31,8 +31,8 @@ class App extends Component {
 
     return (
       <ConnectedRouter history={history}>
-        <div className="app">
-          <NavBar/>
+        <div className="container">
+          <NavBar className="mb-5"/>
           <AppRouter/>
         </div>
       </ConnectedRouter>
