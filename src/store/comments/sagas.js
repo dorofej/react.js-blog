@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const l = require('../../utils/log')(module);
-
 import {
   all,
   takeLatest,
@@ -26,8 +23,6 @@ const fetchComments = (postId) => callApi(
 const addComment = (body) => callApi('comments', 'POST', body);
 
 function* watchCommentsFetching(action) {
-  l();
-
   try {
     const comments = yield call(fetchComments, action.postId);
 
@@ -42,8 +37,6 @@ function* watchCommentsFetching(action) {
 };
 
 function* watchCommentAdding(action) {
-  l();
-
   try {
     const comment = yield call(addComment, action.body);
 
@@ -58,8 +51,6 @@ function* watchCommentAdding(action) {
 };
 
 export default function* rootSaga() {
-  l();
-
   yield all([
     takeLatest(FETCH_COMMENTS_REQUEST, watchCommentsFetching),
     takeEvery(ADD_COMMENT_REQUEST, watchCommentAdding),

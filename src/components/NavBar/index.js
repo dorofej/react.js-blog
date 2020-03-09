@@ -1,13 +1,8 @@
-/* eslint-disable import/first */
-const l = require('../../utils/log')(module);
-
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 
 export default function NavBar({ className, ...props }) {
-  l();
-
   return (
     <div className={classnames('sticky-top', className)}>
       <div className="navbar bg-light shadow-sm">

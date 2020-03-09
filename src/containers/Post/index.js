@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const l = require('../../utils/log')(module);
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -13,8 +10,6 @@ import { fetchUser } from '../../store/user/actions';
 
 class Post extends Component {
   constructor(props) {
-    l();
-
     super(props);
 
     this.handleCommentInputChange = this.handleCommentInputChange.bind(this);
@@ -27,24 +22,18 @@ class Post extends Component {
   }
 
   componentDidMount() {
-    l();
-
     const { fetchComments, match } = this.props;
     fetchComments(match.params.id);
     this.loadUser();
   }
 
   handleCommentInputChange({ target }) {
-    l();
-
     const { value } = target;
     this.setState({ comment: value });
     storage('comment', value);
   }
 
   addComment() {
-    l();
-
     this.props.addComment({
       postId: 501,
       title: 'Title',
@@ -57,11 +46,8 @@ class Post extends Component {
   }
 
   loadUser() {
-    l();
-
     const { fetchUser } = this.props;
     const intervalId = setInterval(() => {
-      l('SET_INTERVAL');
       const post = this.getPostObj();
       if (post) {
         fetchUser(post.userId);
@@ -71,8 +57,6 @@ class Post extends Component {
   }
 
   getPostObj() {
-    l();
-
     const { posts, match } = this.props;
     const postId = Number(match.params.id);
 
@@ -82,8 +66,6 @@ class Post extends Component {
   }
 
   renderPost() {
-    l();
-
     const post = this.getPostObj();
     if (!post) {
       return (
@@ -115,8 +97,6 @@ class Post extends Component {
   }
 
   renderUserInfo() {
-    l();
-
     const { user, isUserLoaded } = this.props;
 
     if (isUserLoaded) {
@@ -152,8 +132,6 @@ class Post extends Component {
   }
 
   renderComments() {
-    l();
-
     const { comments, areCommentsLoaded } = this.props;
 
     return (
@@ -197,8 +175,6 @@ class Post extends Component {
   }
 
   render() {
-    l();
-
     const { arePostsLoaded } = this.props;
 
     if (arePostsLoaded) {

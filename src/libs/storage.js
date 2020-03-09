@@ -1,9 +1,4 @@
-/* eslint-disable import/first */
-const l = require('../utils/log')(module);;
-
 export default function accessStorage(...args) {
-  l();
-
   let action, storageName, data;
   if (args.length === 1) {
     action = 'get';

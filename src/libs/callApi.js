@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const l = require('../utils/log')(module);
-
 const API_PREFIX = 'https://jsonplaceholder.typicode.com';
 
 export default function callApi(
@@ -9,7 +6,6 @@ export default function callApi(
   body,
   headers = { 'Content-Type': 'application/json' }
 ) {
-  l();
 
   return fetch(`${API_PREFIX}/${endPoint}`, {
     headers,

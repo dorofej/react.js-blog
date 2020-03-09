@@ -1,11 +1,6 @@
-/* eslint-disable import/first */
-const l = require('../../utils/log')(module);
-
 import React from 'react';
 
 const About = (props) => {
-  l();
-
   return (
     <div className="jumbotron">
       <h3>Short Description</h3>

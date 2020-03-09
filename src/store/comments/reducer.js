@@ -1,6 +1,3 @@
-/* eslint-disable import/first, no-unreachable */
-const l = require('../../utils/log')(module);
-
 import {
   FETCH_COMMENTS_REQUEST,
   FETCH_COMMENTS_SUCCESS,
@@ -24,8 +21,6 @@ export default function commentsReducer(
   state = initState,
   action
 ) {
-  l();
-
   switch(action.type) {
     case FETCH_COMMENTS_REQUEST:
       return {

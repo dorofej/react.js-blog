@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const l = require('../utils/log')(module);
-
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import logger from 'redux-logger';
@@ -17,7 +14,6 @@ const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware, routeMiddleware];
 
 if (process.env.NODE_ENV === 'development') {
-  l('DEVELOPMENT MODE');
   middlewares.push(logger);
 };
 

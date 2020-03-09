@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const l = require('../../utils/log')(module);
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -12,8 +9,6 @@ const KEYS_TO_FILTERS = ['title', 'body'];
 
 class Posts extends Component {
   constructor(props) {
-    l();
-
     super(props);
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -24,14 +19,10 @@ class Posts extends Component {
   }
 
   handleSearch(event) {
-    l();
-
     this.setState({ searchTerm: event.target.value });
   }
 
   getFilteredPosts() {
-    l();
-
     return this.props.posts
       .filter(createFilter(
         this.state.searchTerm,
@@ -40,8 +31,6 @@ class Posts extends Component {
   }
 
   renderSearchBox() {
-    l();
-
     return (
       <div className="my-5">
         <input
@@ -57,8 +46,6 @@ class Posts extends Component {
   }
 
   renderPosts() {
-    l();
-
     if (this.props.loading) {
       return <Spinner/>;
     }
@@ -89,8 +76,6 @@ class Posts extends Component {
   }
 
   render() {
-    l();
-
     return (
       <>
         {this.renderSearchBox()}

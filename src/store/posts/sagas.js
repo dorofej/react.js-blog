@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const l = require('../../utils/log')(module);
-
 import {
   all,
   takeLatest,
@@ -18,8 +15,6 @@ import {
 const fetchPosts = () => callApi('posts');
 
 function* watchPostsFetching(action) {
-  l();
-
   try {
     const posts = yield call(fetchPosts);
 
@@ -34,8 +29,6 @@ function* watchPostsFetching(action) {
 };
 
 export default function* rootSaga() {
-  l();
-
   yield all([
     takeLatest(FETCH_POSTS_REQUEST, watchPostsFetching),
   ]);

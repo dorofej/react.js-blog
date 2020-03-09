@@ -1,6 +1,3 @@
-/* eslint-disable import/first, no-unreachable */
-const l = require('../../utils/log')(module);
-
 import {
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
@@ -18,8 +15,6 @@ export default function postsReducer(
   state = initState,
   action
 ) {
-  l();
-
   switch(action.type) {
     case FETCH_POSTS_REQUEST:
       return {
