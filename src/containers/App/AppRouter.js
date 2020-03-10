@@ -11,19 +11,19 @@ const AppRouter = (props) => {
         exact
         key="root"
         path="/"
-        component={() => (<Redirect to="/posts"/>)}
+        component={() => <Redirect to="/posts"/>}
       />
       <Route
         exact
         key="posts"
         path="/posts"
-        component={asyncComponent(() => import('../../containers/Posts'))}
+        component={asyncComponent(() => import('../../containers/PostsList'))}
       />
       <Route
         exact
         key="post"
         path="/posts/:id"
-        component={asyncComponent(() => import('../../containers/Post'))}
+        component={asyncComponent(() => import('../../containers/SinglePost'))}
       />
       <Route
         exact
