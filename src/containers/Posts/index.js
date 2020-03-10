@@ -1,31 +1,56 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subject, Subscription, BehaviorSubject } from 'rxjs';
 import { switchMap, catchError, tap, debounceTime, delay } from 'rxjs/operators';
 
 import Spinner from '../../components/Spinner';
 import Error from '../../components/Error';
+import Input from '../../components/Input';
+import Pagination from '../../components/Pagination';
 import callApi from '../../libs/callApi';
+import serializeUrlParams from '../../libs/serializeUrlParams';
 
 class PostsList extends Component {
   state = {
     posts: [],
     searching: true,
     searchTerm: '',
+    page: 1,
+    lastPage: false,
     error: null,
   };
 
-  subscription$ = new Subscription();
-  subject$ = new BehaviorSubject('').pipe(
-    tap((searchTerm) => this.setState({ searchTerm })),
+  pageLimit = 10;
+
+  searchInputSubscription$ = new Subscription();
+  searchInputSubject$ = new Subject().pipe(
+    tap((searchTerm) => this.setState({ searchTerm, page: 1 })),
     debounceTime(250),
+    tap((searchTerm) => this.searchingSubject$.next(searchTerm))
+  );
+
+  paginationSubscription$ = new Subscription();
+  paginationSubject$ = new Subject().pipe(
+    tap((page) => {
+      this.setState(
+        { page },
+        () => this.searchingSubject$.next(this.state.searchTerm)
+      );
+    })
+  );
+
+  searchingSubscription$ = new Subscription();
+  searchingSubject$ = new BehaviorSubject('').pipe(
+    tap(() => this.setState({ searching: true })),
     switchMap((q) => {
-      this.setState({ searching: true });
-      return callApi(!q ? `posts` : `posts?q=${q}`);
+      const query = { q, _limit: this.pageLimit, _page: this.state.page };
+      const path = `posts?${serializeUrlParams(query)}`;
+      return callApi(path);
     }),
     delay(250),
     tap((posts) => {
-      this.setState({ posts, searching: false });
+      const lastPage = posts.length < this.pageLimit;
+      this.setState({ posts, lastPage, searching: false });
     }),
     catchError((error) => {
       this.setState({ error, searching: false });
@@ -33,27 +58,48 @@ class PostsList extends Component {
   );
 
   componentDidMount() {
-    this.subscription$ = this.subject$.subscribe();
+    this.searchInputSubscription$ = this.searchInputSubject$.subscribe();
+    this.paginationSubscription$ = this.paginationSubject$.subscribe();
+    this.searchingSubscription$ = this.searchingSubject$.subscribe();
   }
 
   componentWillUnmount() {
-    this.subscription$.unsubscribe();
+    this.searchInputSubscription$.unsubscribe();
+    this.paginationSubscription$.unsubscribe();
+    this.searchingSubscription$.unsubscribe();
   }
-
-  handleSearch = (event) => {
-    this.subject$.next(event.target.value);
-  };
 
   renderSearchInput() {
     return (
-      <input
+      <Input
         autoFocus
-        className="form-control"
+        showClear
         type="text"
         value={this.state.searchTerm}
         placeholder="Find post"
-        onChange={this.handleSearch}
+        onChange={(e) => this.searchInputSubject$.next(e.target.value)}
+        onClear={(e) => this.state.searchTerm && this.searchInputSubject$.next('')}
       />
+    );
+  }
+
+  renderPostCard({ title, body, id }) {
+    return (
+      <div key={id} className="col-md-6 mt-4">
+        <div className="card h-100">
+          <div className="card-header">
+            <h5 className="card-title mb-0 text-truncate">{title}</h5>
+          </div>
+          <div className="card-body">
+            <div className="card-text">{body}</div>
+          </div>
+          <div className="card-footer">
+            <Link className="btn btn-primary" to={`/posts/${id}`}>
+              Read
+            </Link>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -69,28 +115,20 @@ class PostsList extends Component {
     const { posts } = this.state;
 
     if (posts.length === 0) {
-      return <h4>Posts not found</h4>;
+      return <h4 className="mt-4 mb-0">Posts not found</h4>;
     }
 
     return (
-      <div className="row">
-        {posts.map(({ title, body, id }) => (
-          <div key={id} className="col-md-6 mt-4">
-            <div className="card h-100">
-              <div className="card-header">
-                <h5 className="card-title mb-0 text-truncate">{title}</h5>
-              </div>
-              <div className="card-body">
-                <div className="card-text">{body}</div>
-              </div>
-              <div className="card-footer">
-                <Link className="btn btn-primary" to={`/posts/${id}`}>
-                  Read
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div>
+        <div className="row">
+          {posts.map(this.renderPostCard)}
+        </div>
+        <Pagination
+          className="mt-4"
+          page={this.state.page}
+          lastPage={this.state.lastPage}
+          onPaginate={(page) => this.paginationSubject$.next(page)}
+        />
       </div>
     );
   }
