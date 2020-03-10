@@ -13,7 +13,19 @@ class App extends Component {
     return (
       <ConnectedRouter history={history}>
         <div className="container pb-3">
-          <NavBar className="mb-5"/>
+          {/*
+            FIXME: below div is little hack to work around input outline
+            appearance behind navbar.
+            Also body background-color should be set
+          */}
+          <div
+            style={{ backgroundColor: 'var(--white)' }}
+            className="row mb-5 sticky-top"
+          >
+            <div className="col-12">
+              <NavBar/>
+            </div>
+          </div>
           <AppRouter/>
         </div>
       </ConnectedRouter>
