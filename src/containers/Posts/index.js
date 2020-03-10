@@ -7,7 +7,7 @@ import Spinner from '../../components/Spinner';
 import Error from '../../components/Error';
 import callApi from '../../libs/callApi';
 
-class Posts extends Component {
+class PostsList extends Component {
   state = {
     posts: [],
     searching: true,
@@ -105,4 +105,4 @@ class Posts extends Component {
   }
 };
 
-export default Posts;
+export default PostsList;

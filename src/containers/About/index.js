@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = (props) => {
   return (
-    <div className="jumbotron">
+    <div className="jumbotron m-0">
       <h3>Short Description</h3>
       <div>
         It's a mini-blog with a list of articles where you can

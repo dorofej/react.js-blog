@@ -9,7 +9,7 @@ import Error from '../../components/Error';
 import storage from '../../libs/storage';
 import callApi from '../../libs/callApi';
 
-class Post extends Component {
+class SinglePost extends Component {
   state = {
     post: null,
     user: null,
@@ -132,7 +132,7 @@ class Post extends Component {
 
   renderCommentInput() {
     return (
-      <div className="form-group">
+      <div className="form-group m-0">
         <h4>Your comment</h4>
         <textarea
           className="form-control"
@@ -180,4 +180,4 @@ class Post extends Component {
   }
 };
 
-export default withRouter(Post);
+export default withRouter(SinglePost);
