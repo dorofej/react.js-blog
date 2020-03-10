@@ -9,17 +9,10 @@ import { fetchComments, addComment } from '../../store/comments/actions';
 import { fetchUser } from '../../store/user/actions';
 
 class Post extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleCommentInputChange = this.handleCommentInputChange.bind(this);
-    this.addComment = this.addComment.bind(this);
-
-    this.state = {
-      comment: storage('comment'),
-      userInfoVisible: false,
-    };
-  }
+  state = {
+    comment: storage('comment'),
+    userInfoVisible: false,
+  };
 
   componentDidMount() {
     const { fetchComments, match } = this.props;
@@ -27,13 +20,13 @@ class Post extends Component {
     this.loadUser();
   }
 
-  handleCommentInputChange({ target }) {
+  handleCommentInputChange = ({ target }) => {
     const { value } = target;
     this.setState({ comment: value });
     storage('comment', value);
-  }
+  };
 
-  addComment() {
+  addComment = () => {
     this.props.addComment({
       postId: 501,
       title: 'Title',
@@ -43,7 +36,7 @@ class Post extends Component {
 
     this.setState({ comment: '' });
     storage('comment', '');
-  }
+  };
 
   loadUser() {
     const { fetchUser } = this.props;

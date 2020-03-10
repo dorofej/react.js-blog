@@ -6,13 +6,9 @@ import 'nprogress/nprogress.css';
 
 export default function asyncComponent(importComponent) {
   class AsyncFunc extends Component {
-    constructor(props) {
-      super(props);
-
-      this.state = {
-        component: null,
-      };
-    }
+    state = {
+      component: null,
+    };
 
     componentWillMount() {
       Nprogress.start();

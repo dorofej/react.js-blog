@@ -8,19 +8,13 @@ import Spinner from '../../components/Spinner';
 const KEYS_TO_FILTERS = ['title', 'body'];
 
 class Posts extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    searchTerm: '',
+  };
 
-    this.handleSearch = this.handleSearch.bind(this);
-
-    this.state = {
-      searchTerm: '',
-    };
-  }
-
-  handleSearch(event) {
+  handleSearch = (event) => {
     this.setState({ searchTerm: event.target.value });
-  }
+  };
 
   getFilteredPosts() {
     return this.props.posts
