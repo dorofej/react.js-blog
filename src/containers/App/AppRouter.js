@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import asyncComponent from '../../libs/asyncComponent';
+import PostsList from '../../containers/PostsList';
 
 const AppRouter = (props) => {
 
@@ -17,7 +18,10 @@ const AppRouter = (props) => {
         exact
         key="posts"
         path="/posts"
-        component={asyncComponent(() => import('../../containers/PostsList'))}
+        // FIXME: remounting occurs while changing url parameter string
+        // which causes bad experience during posts searching
+        // component={asyncComponent(() => import('../../containers/PostsList'))}
+        component={PostsList}
       />
       <Route
         exact

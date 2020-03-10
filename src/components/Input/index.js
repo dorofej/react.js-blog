@@ -1,15 +1,21 @@
 import React from 'react';
 import classnames from 'classnames';
 
-const Input = ({ className, showClear = false, onClear, ...props }) => {
+const Input = ({
+  className,
+  value,
+  showClear = false,
+  onClear,
+  ...props
+}) => {
   return (
     <div className={classnames('input-group', className)}>
-      <input className="form-control" {...props}/>
+      <input className="form-control" value={value} {...props}/>
       {showClear && (
         <div
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', userSelect: 'none' }}
           className="input-group-append"
-          onClick={onClear}
+          onClick={value ? onClear : null}
         >
           <span className="input-group-text">&times;</span>
         </div>
