@@ -1,23 +1,49 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import SmoothCollapse from 'react-smooth-collapse';
+import { Subscription, forkJoin, defer } from 'rxjs';
+import { switchMap, catchError, tap } from 'rxjs/operators';
 
 import Spinner from '../../components/Spinner';
+import Error from '../../components/Error';
 import storage from '../../libs/storage';
-import { fetchComments, addComment } from '../../store/comments/actions';
-import { fetchUser } from '../../store/user/actions';
+import callApi from '../../libs/callApi';
 
 class Post extends Component {
   state = {
+    post: null,
+    user: null,
+    comments: [],
+    loading: true,
     comment: storage('comment'),
     userInfoVisible: false,
+    error: null,
   };
 
+  subscription$ = new Subscription();
+  observable$ = defer(() => callApi(`posts/${this.props.match.params.id}`)).pipe(
+    switchMap((post) => {
+      this.setState({ post });
+
+      return forkJoin(
+        callApi(`users/${post.userId}`),
+        callApi(`comments?postId=${post.id}`)
+      );
+    }),
+    tap(([user, comments]) => {
+      this.setState({ user, comments, loading: false });
+    }),
+    catchError((error) => {
+      this.setState({ error, loading: false });
+    })
+  );
+
   componentDidMount() {
-    const { fetchComments, match } = this.props;
-    fetchComments(match.params.id);
-    this.loadUser();
+    this.subscription$ = this.observable$.subscribe();
+  }
+
+  componentWillUnmount() {
+    this.subscription$.unsubscribe();
   }
 
   handleCommentInputChange = ({ target }) => {
@@ -27,53 +53,17 @@ class Post extends Component {
   };
 
   addComment = () => {
-    this.props.addComment({
-      postId: 501,
-      title: 'Title',
-      body: this.state.comment,
-      userId: 1,
-    });
-
     this.setState({ comment: '' });
     storage('comment', '');
   };
 
-  loadUser() {
-    const { fetchUser } = this.props;
-    const intervalId = setInterval(() => {
-      const post = this.getPostObj();
-      if (post) {
-        fetchUser(post.userId);
-        clearInterval(intervalId);
-      };
-    }, 500);
-  }
-
-  getPostObj() {
-    const { posts, match } = this.props;
-    const postId = Number(match.params.id);
-
-    for (let i = 0; i < posts.length; i++) {
-      if (posts[i].id === postId) return posts[i];
-    };
-  }
-
   renderPost() {
-    const post = this.getPostObj();
-    if (!post) {
-      return (
-        <div>
-          Post with this id doesn't exist!
-        </div>
-      );
-    }
-
-    const { title, body } = post;
+    const { post } = this.state;
 
     return (
       <div>
-        <h4>{title}</h4>
-        <div className="mt-2">{body}</div>
+        <h4>{post.title}</h4>
+        <div className="mt-2">{post.body}</div>
       </div>
     );
   }
@@ -90,14 +80,7 @@ class Post extends Component {
   }
 
   renderUserInfo() {
-    const { user, isUserLoaded } = this.props;
-
-    if (isUserLoaded) {
-      return <Spinner/>;
-    }
-
-    if (!user) return null;
-
+    const { user } = this.state;
     const { address } = user;
 
     return (
@@ -125,31 +108,25 @@ class Post extends Component {
   }
 
   renderComments() {
-    const { comments, areCommentsLoaded } = this.props;
+    const { comments } = this.state;
 
     return (
-      <>
+      <div>
         <h4>Comments</h4>
-        {
-          areCommentsLoaded
-            ?
-          <Spinner/>
-            :
-          comments.map(({ id, name, email, body }) => (
-            <div key={id} className="card mt-4 border-secondary">
-              <div className="card-body">
-                <h5 class="card-title">{name}</h5>
-                <div className="cart-text">
-                  {body}
-                </div>
-                <a className="d-block border-top mt-2 pt-2" href={`mailto:${email}`}>
-                  {email}
-                </a>
+        {comments.map(({ id, name, email, body }) => (
+          <div key={id} className="card mt-4 border-secondary">
+            <div className="card-body">
+              <h5 className="card-title">{name}</h5>
+              <div className="cart-text">
+                {body}
               </div>
+              <a className="d-block border-top mt-2 pt-2" href={`mailto:${email}`}>
+                {email}
+              </a>
             </div>
-          ))
-        }
-      </>
+          </div>
+        ))}
+      </div>
     );
   }
 
@@ -168,13 +145,21 @@ class Post extends Component {
   }
 
   render() {
-    const { arePostsLoaded } = this.props;
+    const { loading, post, error } = this.state;
 
-    if (arePostsLoaded) {
+    if (loading) {
+      return <Spinner/>;
+    }
+
+    if (error) {
+      return <Error error={error}/>;
+    }
+
+    if (!post) {
       return (
-        <div style={{ marginTop: 40 }}>
-          <Spinner/>
-        </div>
+        <h4>
+          Post doesn't exist
+        </h4>
       );
     }
 
@@ -185,29 +170,14 @@ class Post extends Component {
           {this.renderUserInfo()}
         </div>
         <div className="mt-5">
-          {this.renderComments()}
+          {this.renderCommentInput()}
         </div>
         <div className="mt-5">
-          {this.renderCommentInput()}
+          {this.renderComments()}
         </div>
       </>
     );
   }
 };
 
-const mapStateToProps = ({ Posts, Comments, User }) => ({
-  posts: Posts.posts,
-  arePostsLoaded: Posts.loading,
-  postsError: Posts.error,
-  comments: Comments.comments,
-  areCommentsLoaded: Comments.loading,
-  commentsError: Comments.error,
-  user: User.user,
-  isUserLoaded: User.loading,
-  userError: User.error,
-});
-
-export default connect(
-  mapStateToProps,
-  { fetchComments, addComment, fetchUser }
-)(withRouter(Post));
+export default withRouter(Post);
