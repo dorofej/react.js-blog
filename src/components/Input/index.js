@@ -2,6 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 
 const Input = ({
+  style,
   className,
   value,
   showClear = false,
@@ -9,7 +10,7 @@ const Input = ({
   ...props
 }) => {
   return (
-    <div className={classnames('input-group', className)}>
+    <div style={style} className={classnames('input-group', className)}>
       <input className="form-control" value={value} {...props}/>
       {showClear && (
         <div

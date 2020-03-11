@@ -61,6 +61,8 @@ class PostsList extends Component {
   renderSearchInput() {
     return (
       <Input
+        style={{ top: 60 }}
+        className="sticky-top shadow shadow-sm"
         autoFocus
         showClear
         type="text"
