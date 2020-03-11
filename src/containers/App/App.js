@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
 import NavBar from '../../components/NavBar';
 import AppRouter from './AppRouter';
 
 import { history } from '../../store';
+import { fetchProfile } from '../../store/profile/actions';
 
 import './styles.less';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.fetchProfile();
+  }
+
   render() {
     return (
       <ConnectedRouter history={history}>
@@ -33,4 +39,4 @@ class App extends Component {
   }
 };
 
-export default App;
+export default connect(null, { fetchProfile })(App);

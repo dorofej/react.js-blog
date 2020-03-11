@@ -1,5 +1,5 @@
-import User from './user/reducer';
+import Profile from './profile/reducer';
 
 export default {
-  User
+  Profile
 };
