@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 
 import Avatar from '../Avatar';
-import AvatarPlaceholder from '../Avatar/Placeholder';
 
 function NavBar({ className, user, loading, ...props }) {
   return (
@@ -18,8 +17,7 @@ function NavBar({ className, user, loading, ...props }) {
           <NavLink className="nav-link ml-3" to="/about" activeClassName="border-bottom border-primary">
             About
           </NavLink>
-          {!loading && <Avatar className="ml-4" user={user}/>}
-          {loading && <AvatarPlaceholder className="ml-4"/>}
+          <Avatar className="ml-4" loading={loading} user={user}/>
         </div>
       </div>
     </div>

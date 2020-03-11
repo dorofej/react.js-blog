@@ -1,19 +1,14 @@
 import React from 'react';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import classnames from 'classnames';
 
 import defaultStyle from './defaultStyle';
+import './Placeholder.less';
 
-const Placeholder = ({ style, className, ...props }) => {
+const Placeholder = () => {
   return (
     <div
-      style={{ ...style, ...defaultStyle }}
-      className={classnames('rounded overflow-hidden', className)}
-    >
-      <SkeletonTheme color="#6c757d" highlightColor="#343a40">
-        <Skeleton width={defaultStyle.width} height={defaultStyle.height}/>
-      </SkeletonTheme>
-    </div>
+      style={defaultStyle}
+      className="placeholder"
+    />
   );
 };
 
