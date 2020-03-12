@@ -24,8 +24,9 @@ function NavBar({ className, user, loading, ...props }) {
   );
 };
 
-const mapStateToProps = ({ Profile }) => {
+const mapStateToProps = ({ Profile, router }) => {
   return {
+    router,
     user: Profile.user,
     loading: Profile.loading
   };
