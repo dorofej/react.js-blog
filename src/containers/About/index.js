@@ -3,7 +3,7 @@ import React from 'react';
 const About = (props) => {
   return (
     <div className="jumbotron m-0">
-      <h3>Short Description</h3>
+      <h3>Short description</h3>
       <div>
         It's a mini-blog with a list of articles where you can
         click on the article and see it separately. From above
@@ -16,12 +16,18 @@ const About = (props) => {
         list of comments on this article.
       </div>
 
-      <h3 className="mt-4">Technology Stack</h3>
-      <div>
-        <div><i className="fa fa-check mr-1"/>React;</div>
-        <div><i className="fa fa-check mr-1"/>Redux-Saga;</div>
-        <div><i className="fa fa-check mr-1"/>React Router;</div>
-        <div><i className="fa fa-check mr-1"/>Webpack.</div>
+      <h3 className="mt-4">Technology stack</h3>
+      <div className="row">
+        <div className="col-md-6">
+          <ul className="list-group">
+            <li className="list-group-item list-group-item-action">React</li>
+            <li className="list-group-item list-group-item-action">Redux-Saga</li>
+            <li className="list-group-item list-group-item-action">RxJS</li>
+            <li className="list-group-item list-group-item-action">Bootstrap</li>
+            <li className="list-group-item list-group-item-action">React Router</li>
+            <li className="list-group-item list-group-item-action">Webpack</li>
+          </ul>
+        </div>
       </div>
 
       <h4 className="mt-4">Notes</h4>

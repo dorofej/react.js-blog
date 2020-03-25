@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Subscription, BehaviorSubject } from 'rxjs';
@@ -136,10 +136,10 @@ class PostsList extends Component {
 
   render() {
     return (
-      <>
+      <Fragment>
         {this.renderSearchInput()}
         {this.renderPosts()}
-      </>
+      </Fragment>
     );
   }
 };
