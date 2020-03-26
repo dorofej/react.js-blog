@@ -7,7 +7,7 @@ import { switchMap, catchError, tap } from 'rxjs/operators';
 import Spinner from '../../components/Spinner';
 import Image from '../../components/Image';
 import Error from '../../components/Error';
-import storage from '../../libs/storage';
+import Storage from '../../libs/Storage';
 import callApi from '../../libs/callApi';
 
 class SinglePost extends Component {
@@ -16,7 +16,7 @@ class SinglePost extends Component {
     user: null,
     comments: [],
     loading: true,
-    comment: storage('comment'),
+    comment: '',
     userInfoVisible: false,
     error: null,
   };
@@ -39,8 +39,11 @@ class SinglePost extends Component {
     })
   );
 
-  componentDidMount() {
+  async componentDidMount() {
     this.subscription$ = this.observable$.subscribe();
+
+    const comment = await Storage.get('comment');
+    this.setState({ comment });
   }
 
   componentWillUnmount() {
@@ -50,12 +53,12 @@ class SinglePost extends Component {
   handleCommentInputChange = ({ target }) => {
     const { value } = target;
     this.setState({ comment: value });
-    storage('comment', value);
+    Storage.set('comment', value);
   };
 
   addComment = () => {
     this.setState({ comment: '' });
-    storage('comment', '');
+    Storage.set('comment', '');
   };
 
   renderPost() {
@@ -145,6 +148,7 @@ class SinglePost extends Component {
         <textarea
           className="form-control"
           rows="3"
+          value={this.state.comment}
           onChange={this.handleCommentInputChange}
         />
         <button className="btn btn-primary mt-3" onClick={this.addComment}>Add</button>
