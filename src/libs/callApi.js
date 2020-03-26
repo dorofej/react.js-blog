@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_PREFIX = 'https://jsonplaceholder.typicode.com';
+let API_PREFIX = 'https://json-fake-api-server.herokuapp.com';
+if (process.env.NODE_ENV === 'development') {
+  API_PREFIX = 'http://localhost:3000'
+};
 
 /**
  * @param {string} route
