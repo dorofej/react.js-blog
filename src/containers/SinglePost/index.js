@@ -5,6 +5,7 @@ import { Subscription, forkJoin, defer } from 'rxjs';
 import { switchMap, catchError, tap } from 'rxjs/operators';
 
 import Spinner from '../../components/Spinner';
+import Image from '../../components/Image';
 import Error from '../../components/Error';
 import storage from '../../libs/storage';
 import callApi from '../../libs/callApi';
@@ -61,9 +62,16 @@ class SinglePost extends Component {
     const { post } = this.state;
 
     return (
-      <div>
-        <h4>{post.title}</h4>
-        <div className="mt-2">{post.body}</div>
+      <div className="row">
+        <div className="col-md-8">
+          <h4>{post.title}</h4>
+          <div className="mt-2">{post.body}</div>
+        </div>
+        <div className="col-md-4 mt-4 mt-md-0">
+          <Image
+            src={`${post.thumbnail}?postId=${post.id}`}
+          />
+        </div>
       </div>
     );
   }

@@ -1,12 +1,11 @@
 import React from 'react';
 
-import defaultStyle from './defaultStyle';
 import './Placeholder.less';
 
-const Placeholder = () => {
+const Placeholder = ({ className, style, ...props }) => {
   return (
     <div
-      style={defaultStyle}
+      style={style}
       className="placeholder"
     />
   );

@@ -8,6 +8,7 @@ import Spinner from '../../components/Spinner';
 import Error from '../../components/Error';
 import Input from '../../components/Input';
 import Pagination from '../../components/Pagination';
+import Image from '../../components/Image';
 import callApi from '../../libs/callApi';
 import URLParams from '../../libs/URLParams';
 import URLLocation from '../../libs/URLLocation';
@@ -74,13 +75,19 @@ class PostsList extends Component {
     );
   }
 
-  renderPostCard({ title, body, id }) {
+  renderPostCard({ title, body, id, thumbnail }) {
     return (
       <div key={id} className="col-md-6 mt-4">
         <div className="card h-100">
           <div className="card-header">
             <h5 className="card-title mb-0 text-truncate">{title}</h5>
           </div>
+          <Image
+            style={{ minHeight: 200 }}
+            className="card-img"
+            src={`${thumbnail}?postId=${id}`}
+            title={title}
+          />
           <div className="card-body">
             <div className="card-text">{body}</div>
           </div>

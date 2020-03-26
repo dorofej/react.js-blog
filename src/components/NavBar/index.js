@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 import Avatar from '../Avatar';
 
-function NavBar({ className, user, loading, ...props }) {
+function NavBar({ className, user, ...props }) {
   return (
     <div className={classnames(/* 'sticky-top',  */className)}>
       <div className="navbar bg-light shadow-sm">
@@ -17,7 +17,7 @@ function NavBar({ className, user, loading, ...props }) {
           <NavLink className="nav-link ml-3" to="/about" activeClassName="border-bottom border-primary">
             About
           </NavLink>
-          <Avatar className="ml-4" loading={loading} user={user}/>
+          <Avatar className="ml-4" user={user}/>
         </div>
       </div>
     </div>
@@ -28,7 +28,6 @@ const mapStateToProps = ({ Profile, router }) => {
   return {
     router,
     user: Profile.user,
-    loading: Profile.loading
   };
 };
 
